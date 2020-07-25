@@ -85,6 +85,16 @@ variable "scale_out_cpu" {
 }
 
 
+variable "db_admin_cidrs" {
+  description = "Database Admin CIDRs"
+  type        = list
+}
+
+variable "db_port" {
+  description = "Database Port"
+  default        = 3306
+}
+
 
 variable "custom_tags" {
   description = "custom tags"

@@ -9,6 +9,10 @@ data "template_file" "myapp" {
     fargate_memory = var.fargate_memory
     aws_region     = var.region
     stage          = var.stage
+    env_db_host    = var.env_db_host
+    env_db_user    = var.env_db_user
+    env_db_password= var.env_db_password
+    env_rails_env  = var.env_rails_env
   }
 }
 

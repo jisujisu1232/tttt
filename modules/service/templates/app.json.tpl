@@ -19,5 +19,23 @@
         "hostPort": ${app_port}
       }
     ]
+    "environment": [
+      {
+        "name": "DB_HOST",
+        "value": "${env_db_host}"
+      },
+      {
+        "name": "DB_USERNAME",
+        "value": "${env_db_user}"
+      },
+      {
+        "name": "DB_PASSWORD",
+        "value": "${env_db_password}"
+      },
+      {
+        "name": "RAILS_ENV",
+        "value": "${env_rails_env}"
+      }
+    ],
   }
 ]
