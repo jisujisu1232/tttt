@@ -85,16 +85,31 @@ variable "scale_out_cpu" {
 }
 
 
-variable "db_admin_cidrs" {
-  description = "Database Admin CIDRs"
-  type        = list
+
+variable "env_rails_env" {
+  description = "Docker ENV RAILS_ENV"
+  type = string
 }
 
-variable "db_port" {
-  description = "Database Port"
-  default        = 3306
+variable "env_db_host" {
+  description = "Docker ENV DB_HOST"
+  type = string
 }
 
+variable "env_db_user" {
+  description = "Docker ENV DB_USER"
+  type = string
+}
+
+variable "env_db_password" {
+  description = "Docker ENV DB_PASSWORD"
+  type = string
+}
+
+variable "service_to_db_sg" {
+  description = "SG for Service to DB "
+  type = string
+}
 
 variable "custom_tags" {
   description = "custom tags"

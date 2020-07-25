@@ -36,11 +36,11 @@ module "db" {
   password = "Qwer1234"
   port     = "3306"
 
-  vpc_security_group_ids = ["${module.service.db_security_group_id}"]
-
+  #vpc_security_group_ids = ["${module.service.db_security_group_id}"]
+  vpc_id             = "${data.terraform_remote_state.vpc.outputs.vpc_id}"
   maintenance_window = "Mon:00:00-Mon:03:00"
   backup_window      = "03:00-06:00"
-
+  db_admin_cidrs = ["0.0.0.0/0"]
   multi_az = true
 
   # disable backups to create DB faster
@@ -103,14 +103,13 @@ module "service" {
   service_name = "jisu"
   ext_alb_subnets = "${data.terraform_remote_state.vpc.outputs.public_subnet_ids}"
   service_subnets = "${data.terraform_remote_state.vpc.outputs.private_subnet_ids}"
+  service_to_db_sg = module.db.app_to_db_sg
   vpc_id = "${data.terraform_remote_state.vpc.outputs.vpc_id}"
   app_port = 3000
   health_check_path = "/"
   ecs_cluster_name = "${data.terraform_remote_state.vpc.outputs.default_ecs_cluster_name}"
   ecs_cluster_id = "${data.terraform_remote_state.vpc.outputs.default_ecs_cluster_id}"
   app_image = "nginx:latest"
-  db_admin_cidrs = ["0.0.0.0/0"]
-  db_port = 3306
   fargate_cpu = 1024
   fargate_memory = 2048
   app_min_size = 2
@@ -120,7 +119,7 @@ module "service" {
 
   env_db_host     =   "${module.db.this_db_instance_endpoint}"
   env_db_user     =   "${module.db.this_db_instance_username}"
-  env_db_password =   "${module.db.this_db_instance_name}"
+  env_db_password =   "${module.db.this_db_instance_password}"
   env_rails_env   =   "development"
 
   custom_tags           = "${var.custom_tags}"
@@ -139,7 +138,7 @@ module "pipeline" {
   git_repository_owner = "jisujisu1232"
   git_repository_name = "rails-realworld-example-app"
   git_repository_branch = "master"
-
+  git_token             = "519ca637a4d4b1122c8b7a9b9181206316de914d"
   vpc_id = "${data.terraform_remote_state.vpc.outputs.vpc_id}"
 
   ecr_repository_url = "${data.terraform_remote_state.vpc.outputs.default_ecr_url}"

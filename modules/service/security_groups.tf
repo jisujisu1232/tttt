@@ -56,38 +56,3 @@ resource "aws_security_group_rule" "service_port" {
   to_port           = "${var.app_port}"
   type              = "ingress"
 }
-
-
-# Database Security Group
-resource "aws_security_group" "db" {
-  name        = "db-sg"
-  description = "${var.service_name} Security Group"
-  vpc_id      = "${var.vpc_id}"
-
-  egress {
-    protocol    = "-1"
-    from_port   = 0
-    to_port     = 0
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-}
-
-resource "aws_security_group_rule" "service_to_db" {
-  description       = "${var.service_name} DB for Service"
-  security_group_id = "${aws_security_group.db.id}"
-  source_security_group_id = "${aws_security_group.service.id}"
-  protocol          = "tcp"
-  from_port         = "${var.db_port}"
-  to_port           = "${var.db_port}"
-  type              = "ingress"
-}
-
-resource "aws_security_group_rule" "admin_to_db" {
-  description       = "${var.service_name} DB for Admin"
-  security_group_id = "${aws_security_group.db.id}"
-  cidr_blocks       = "${var.db_admin_cidrs}"
-  protocol          = "tcp"
-  from_port         = "${var.db_port}"
-  to_port           = "${var.db_port}"
-  type              = "ingress"
-}

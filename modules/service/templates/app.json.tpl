@@ -18,7 +18,7 @@
         "containerPort": ${app_port},
         "hostPort": ${app_port}
       }
-    ]
+    ],
     "environment": [
       {
         "name": "DB_HOST",
@@ -36,6 +36,6 @@
         "name": "RAILS_ENV",
         "value": "${env_rails_env}"
       }
-    ],
+    ]
   }
 ]
