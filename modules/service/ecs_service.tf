@@ -9,11 +9,20 @@ data "template_file" "myapp" {
     fargate_memory = var.fargate_memory
     aws_region     = var.region
     stage          = var.stage
-    env_db_host    = var.env_db_host
+    env_db_host    = "${substr(var.env_db_host, 0, length(var.env_db_host)-5)}"
     env_db_user    = var.env_db_user
-    env_db_password= var.env_db_password
+    env_db_password= aws_secretsmanager_secret_version.db_password.arn
     env_rails_env  = var.env_rails_env
   }
+}
+
+resource "aws_secretsmanager_secret" "db_password" {
+  name = "${var.service_name}-${var.stage}-db-passwd"
+}
+
+resource "aws_secretsmanager_secret_version" "db_password" {
+  secret_id     = "${aws_secretsmanager_secret.db_password.id}"
+  secret_string = var.env_db_password
 }
 
 resource "aws_cloudwatch_log_group" "service_log_group" {
@@ -39,6 +48,11 @@ resource "aws_ecs_task_definition" "app" {
   memory                   = var.fargate_memory
   container_definitions    = data.template_file.myapp.rendered
   depends_on = [aws_alb_listener.http, aws_iam_role_policy_attachment.ecs_task_execution_role]
+  #lifecycle {
+  #  ignore_changes = [
+  #    container_definitions[0].image
+  #  ]
+  #}
 }
 
 resource "aws_ecs_service" "main" {

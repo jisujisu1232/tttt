@@ -51,6 +51,7 @@ variable "ecs_cluster_id" {
 variable "app_image" {
   description = "service Image"
   type = string
+  default = ""
 }
 
 variable "fargate_cpu" {

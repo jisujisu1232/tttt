@@ -96,6 +96,7 @@ module "db" {
   ]
 }
 
+
 module "service" {
   source       = "../modules/service"
   region       = "ap-northeast-2"
@@ -109,7 +110,7 @@ module "service" {
   health_check_path = "/"
   ecs_cluster_name = "${data.terraform_remote_state.vpc.outputs.default_ecs_cluster_name}"
   ecs_cluster_id = "${data.terraform_remote_state.vpc.outputs.default_ecs_cluster_id}"
-  app_image = "nginx:latest"
+  app_image = "${data.terraform_remote_state.vpc.outputs.default_ecr_url}:latest"
   fargate_cpu = 1024
   fargate_memory = 2048
   app_min_size = 2
@@ -138,7 +139,7 @@ module "pipeline" {
   git_repository_owner = "jisujisu1232"
   git_repository_name = "rails-realworld-example-app"
   git_repository_branch = "master"
-  git_token             = "519ca637a4d4b1122c8b7a9b9181206316de914d"
+  git_token             = "b0b0a4fd5ede540a5a98862c342642a50d14f513"
   vpc_id = "${data.terraform_remote_state.vpc.outputs.vpc_id}"
 
   ecr_repository_url = "${data.terraform_remote_state.vpc.outputs.default_ecr_url}"

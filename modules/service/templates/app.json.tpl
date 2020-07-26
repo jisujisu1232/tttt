@@ -19,6 +19,14 @@
         "hostPort": ${app_port}
       }
     ],
+    "entryPoint": [
+      "bash",
+      "-c"
+    ],
+    "command" : [
+      "/bin/bash -c \"rake db:migrate && rails s -p 3000 -b 0.0.0.0\""
+    ]
+    ,
     "environment": [
       {
         "name": "DB_HOST",
@@ -29,13 +37,15 @@
         "value": "${env_db_user}"
       },
       {
-        "name": "DB_PASSWORD",
-        "value": "${env_db_password}"
-      },
-      {
         "name": "RAILS_ENV",
         "value": "${env_rails_env}"
       }
-    ]
+    ],
+    "containerDefinitions": [{
+      "secrets": [{
+        "name": "DB_PASSWORD",
+        "valueFrom": "${env_db_password}"
+      }]
+    }]
   }
 ]
