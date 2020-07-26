@@ -64,3 +64,14 @@ variable "ecr_name" {
   type        = string
   default     = "ecr"
 }
+
+variable "log_bucket_name" {
+  description = "Flow Log Bucket"
+  type        = string
+  default     = ""
+}
+
+variable "log_expiration_days" {
+  description = "log expiration days"
+  default     = 90
+}

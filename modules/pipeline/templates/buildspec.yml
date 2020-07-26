@@ -1,0 +1,26 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - $(aws ecr get-login --no-include-email)
+      - TAG="$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION)"
+      - REPOSITORY_URI=${repository_uri}
+      - IMAGE_URI="$REPOSITORY_URI"
+      - IMAGE_NAME="${service_name}"
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Building the Docker image...
+      - docker build -t $IMAGE_NAME:latest .
+      - docker tag $IMAGE_NAME:latest $IMAGE_URI:$TAG
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing the Docker images...
+      - docker push $IMAGE_URI:$TAG
+      - echo Writing image definitions file...
+      - printf '[{"name":"${container_name}","imageUri":"%s"}]' $IMAGE_URI:$TAG > imagedefinitions.json
+
+artifacts:
+  files: imagedefinitions.json

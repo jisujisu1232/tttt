@@ -7,3 +7,8 @@ output "container_name" {
   description = "ECS Container Name"
   value = "${var.service_name}-${var.stage}"
 }
+
+output "alb_endpoint" {
+  description = "Service ALB Endpoint"
+  value = "${aws_alb.ext_alb.dns_name}"
+}
