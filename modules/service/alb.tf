@@ -1,7 +1,21 @@
+locals {
+  log_bucket = length(var.service_bucket_name)==0 ? "${var.service_name}-${var.stage}-alb-access-logs" :  var.service_bucket_name
+  log_prefix = "Service-Access_logs/${var.service_name}-ALB"
+  log_expiration_days = "${floor((var.log_expiration_days < 90 ? 90 : var.log_expiration_days) / 3)}"
+}
+
+
+
 resource "aws_alb" "ext_alb" {
   name            = "ext-${var.service_name}-alb"
   subnets         = "${var.ext_alb_subnets}"
   security_groups = [aws_security_group.ext_alb.id]
+
+  access_logs {
+    bucket  = "${local.log_bucket}"
+    prefix  = "${local.log_prefix}"
+    enabled = true
+  }
 }
 
 resource "aws_alb_target_group" "default" {

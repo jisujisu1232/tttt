@@ -86,14 +86,27 @@ variable "scale_out_cpu" {
 }
 
 
+variable "db_admin_cidrs" {
+  description = "Mysql Admin CIDRs"
+  type = list
+  default = ["255.255.255.255/32"]
+}
 
-variable "env_rails_env" {
-  description = "Docker ENV RAILS_ENV"
+variable "db_instance_type" {
+  description = "Mysql EC2 Type"
+  type = string
+  default = "t2.large"
+}
+
+
+variable "db_subnet" {
+  description = "Mysql EC2 Subnet"
   type = string
 }
 
-variable "env_db_host" {
-  description = "Docker ENV DB_HOST"
+
+variable "env_rails_env" {
+  description = "Docker ENV RAILS_ENV"
   type = string
 }
 
@@ -107,12 +120,29 @@ variable "env_db_password" {
   type = string
 }
 
-variable "service_to_db_sg" {
-  description = "SG for Service to DB "
+variable "db_port" {
+  description = "Mysql Service Port"
+  type = string
+  default = "3306"
+}
+
+variable "db_admin_instance_key" {
+  description = "Mysql EC2 Key"
   type = string
 }
 
 variable "custom_tags" {
   description = "custom tags"
   type        = map
+}
+
+variable "service_bucket_name" {
+  description = "custom tags"
+  type        = string
+  default = ""
+}
+
+variable "log_expiration_days" {
+  description = "log expiration days"
+  default = 90
 }

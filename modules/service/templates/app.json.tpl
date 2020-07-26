@@ -41,11 +41,9 @@
         "value": "${env_rails_env}"
       }
     ],
-    "containerDefinitions": [{
-      "secrets": [{
-        "name": "DB_PASSWORD",
-        "valueFrom": "${env_db_password}"
-      }]
+    "secrets": [{
+      "name": "DB_PASSWORD",
+      "valueFrom": "${env_db_password}"
     }]
   }
 ]

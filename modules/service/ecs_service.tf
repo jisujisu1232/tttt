@@ -9,15 +9,23 @@ data "template_file" "myapp" {
     fargate_memory = var.fargate_memory
     aws_region     = var.region
     stage          = var.stage
-    env_db_host    = "${substr(var.env_db_host, 0, length(var.env_db_host)-5)}"
+    env_db_host    = "${aws_instance.mysql.private_ip}"
     env_db_user    = var.env_db_user
     env_db_password= aws_secretsmanager_secret_version.db_password.arn
     env_rails_env  = var.env_rails_env
   }
 }
 
+resource "random_string" "lower" {
+  length  = 10
+  upper   = false
+  lower   = true
+  number  = false
+  special = false
+}
+
 resource "aws_secretsmanager_secret" "db_password" {
-  name = "${var.service_name}-${var.stage}-db-passwd"
+  name = "${var.service_name}-${var.stage}-mysql-passwd-${random_string.lower.result}"
 }
 
 resource "aws_secretsmanager_secret_version" "db_password" {
@@ -63,7 +71,7 @@ resource "aws_ecs_service" "main" {
   launch_type     = "FARGATE"
 
   network_configuration {
-    security_groups  = [aws_security_group.service.id, var.service_to_db_sg]
+    security_groups  = [aws_security_group.service.id, aws_security_group.app_to_db.id]
     subnets          = "${var.service_subnets}"
     assign_public_ip = true
   }
